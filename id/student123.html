@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lost ID - Rahul Sharma</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h2>Rahul Sharma</h2>
+  <p><b>Reg No:</b> 12345</p>
+  <p><b>Roll No:</b> 67</p>
+  <p>If you have found this ID, please allow location so we can return it to the owner.</p>
+  <p><b>Thank you for helping!</b></p>
+
+  <script>
+    // Ask for GPS location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        // Send the location to backend PHP
+        fetch("../api/save_scan.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            regno: "12345",
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        })
+        .then(response => response.text())
+        .then(data => console.log("✅ Location saved:", data))
+        .catch(err => console.error("❌ Error:", err));
+      },
+      function(error) {
+        console.error("❌ Location permission denied:", error);
+      });
+    } else {
+      console.error("❌ Geolocation not supported by this browser.");
+    }
+  </script>
+</body>
+</html>
